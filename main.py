@@ -1,6 +1,6 @@
 import sys
 import os
-import h5py
+# import h5py
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
 sys.path.append(parent_dir )
@@ -39,7 +39,7 @@ from sklearn.preprocessing import label_binarize
 import torch.nn as nn
 warnings.filterwarnings("ignore")
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-from perturbot.perturbot.match import get_coupling_egw_labels_ott, get_coupling_fot
+from perturbot.match import get_coupling_egw_labels_ott, get_coupling_fot
 from torch.utils.data import Dataset
     
 def log_args(log_file):
@@ -525,23 +525,23 @@ if __name__ == "__main__":
                         help='learning rate')
     parser.add_argument('--save_dir', default=r'C:\Users\yuqinkai\PycharmProjects\Code_AAAI\base_code\res\pth\dr_fusion\save', type=str)
     parser.add_argument("--model_name", default="Multi_ResNet", type=str, help="Multi_ResNet")
-    parser.add_argument("--dataset", default="MMOCTF", type=str, help="MMOCTF/MGamma/Gamma/OLIVES")
+    # parser.add_argument("--dataset", default="MMOCTF", type=str, help="MMOCTF/MGamma/Gamma/OLIVES")
     parser.add_argument("--folder", default="folder0", type=str, help="folder0/folder1/folder2/folder3/folder4")
     parser.add_argument("--mode", default="test", type=str, help="train/test/train&test")
-    parser.add_argument("--model_base", default="transformer", type=str, help="transformer/cnn")
-    parser.add_argument("--condition", default="noise", type=str, help="noise/normal")
-    parser.add_argument("--condition_name", default="Gaussian", type=str, help="Gaussian/SaltPepper/All")
-    parser.add_argument("--Condition_SP_Variance", default=0.005, type=int, help="Variance: 0.01/0.1")
-    parser.add_argument("--Condition_G_Variance", default=0.05, type=int, help="Variance: 15/1/0.1")
+    # parser.add_argument("--model_base", default="transformer", type=str, help="transformer/cnn")
+    # parser.add_argument("--condition", default="noise", type=str, help="noise/normal")
+    # parser.add_argument("--condition_name", default="Gaussian", type=str, help="Gaussian/SaltPepper/All")
+    # parser.add_argument("--Condition_SP_Variance", default=0.005, type=int, help="Variance: 0.01/0.1")
+    # parser.add_argument("--Condition_G_Variance", default=0.05, type=int, help="Variance: 15/1/0.1")
     args = parser.parse_args()
     args.seed_idx = 11
     Condition_G_Variance = [0.1,0.2,0.3,0.4,0.5]
-    args.dataset =="MGamma"
+    # args.dataset =="MGamma"
     args.modalties_name = ["FUN", "OCT"]
     # args.dims = [[(128, 256, 128)], [(512, 512)]]
     args.dims = [[(96, 96, 96)], [(384, 384)]]
 
-    args.num_classes = 2
+    args.num_classes = 4
     args.modalties = len(args.dims)
     # args.base_path = r'C:\Users\yuqinkai\PycharmProjects\Code_AAAI\base_code\res\task1_gamma_grading\Glaucoma_grading/'
     # args.data_path = r'C:\Users\yuqinkai\PycharmProjects\Code_AAAI\base_code\res\task1_gamma_grading\Glaucoma_grading\training\multi-modality_images'
@@ -551,8 +551,8 @@ if __name__ == "__main__":
     # args.data_path = r'/mnt/datastore1/qinkaiyu/oct_fundus/mnt/sdb/feilong/Retinal_OCT/Medical_data/Glaucoma_Harvard_enhance/Train/Training'
     # args.base_path = r'D:\AMD\mnt\sdb\feilong\Retinal_OCT\Medical_data\AMD\train/'
     # args.data_path = r'D:\AMD\mnt\sdb\feilong\Retinal_OCT\Medical_data\AMD\train\Image'
-    args.base_path = r'D:\DR\mnt\sdb\feilong\Retinal_OCT\Medical_data\DR\train/'
-    args.data_path = r'D:\DR\mnt\sdb\feilong\Retinal_OCT\Medical_data\DR\train/Image_new'
+    args.base_path = r'D:\AMD\mnt\sdb\feilong\Retinal_OCT\Medical_data\AMD\train/'
+    args.data_path = r'D:\AMD\mnt\sdb\feilong\Retinal_OCT\Medical_data\AMD\train\Image'
     filelists = os.listdir(args.data_path)
     kf = KFold(n_splits=5, shuffle=True, random_state=10)
     y = kf.split(filelists)
@@ -605,7 +605,9 @@ if __name__ == "__main__":
         T_feature_2 = None
         model.train()
         print('Epoch {}/{}'.format(epoch, args.end_epochs))
+        
         epoch_loss = train(epoch, train_loader, model, T_feature_2, best_acc=0.0)
+        
         print("epoch %d avg_loss:%0.3f" % (epoch, epoch_loss.avg))
         print('===========Val begining!===========')
                 # use for val
