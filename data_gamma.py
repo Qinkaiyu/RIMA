@@ -200,12 +200,12 @@ class GAMMA_dataset(Dataset):
                  label_file='',
                  filelists=None,
                  ):
-        self.condition = args.condition
-        self.condition_name = args.condition_name
-        self.Condition_SP_Variance = args.Condition_SP_Variance
-        self.Condition_G_Variance = args.Condition_G_Variance
+        # self.condition = args.condition
+        # self.condition_name = args.condition_name
+        # self.Condition_SP_Variance = args.Condition_SP_Variance
+        # self.Condition_G_Variance = args.Condition_G_Variance
         self.seed_idx = args.seed_idx
-        self.model_base = args.model_base
+        # self.model_base = args.model_base
 
         self.dataset_root = dataset_root
         self.input_D = oct_img_size[0][0]
@@ -260,7 +260,10 @@ class GAMMA_dataset(Dataset):
         fundus_img_path = os.path.join(self.dataset_root.replace('/MGamma/', '/multi-modality_images/'),real_index,f'data_{real_index}_fundus.png')
         # print(fundus_img_path)
         fundus_img = cv2.imread(fundus_img_path)
-        oct_nii = nib.load(os.path.join(self.dataset_root, real_index, f'data_{real_index}.nii'))
+        # if AMD
+        oct_nii = nib.load(os.path.join(self.dataset_root, real_index, f'processed_data_{real_index}.nii'))
+        # if Glaucoma and DR
+        # oct_nii = nib.load(os.path.join(self.dataset_root, real_index, f'data_{real_index}.nii'))
         oct_img = oct_nii.get_fdata()
 
         # # OCT read
@@ -283,69 +286,67 @@ class GAMMA_dataset(Dataset):
         #     oct_img = np.stack(oct_images, axis=0)
 
 
-        if self.model_base == "transformer":
-            fundus_img = scale_image(fundus_img, 384)
-            oct_img = resize_oct_data_trans(oct_img, (96, 96, 96))
-        else:
-            fundus_img = scale_image(fundus_img, 512)
-            oct_img = self.__resize_oct_data__(oct_img)
+
+        fundus_img = scale_image(fundus_img, 384)
+        oct_img = resize_oct_data_trans(oct_img, (96, 96, 96))
+
 
         oct_img = oct_img / 255.0
         fundus_img = fundus_img / 255.0
 
         np.random.seed(self.seed_idx)
 
-        # add noise on fundus & OCT
-        if self.condition == 'noise':
-            if self.condition_name == "SaltPepper":
-                fundus_img = add_salt_peper(fundus_img.transpose(1, 2, 0), self.Condition_SP_Variance)  # c,
-                fundus_img = fundus_img.transpose(2, 0, 1)
-                for i in range(oct_img.shape[0]):
-                    oct_img[i, :, :] = add_salt_peper_3D(oct_img[i, :, :], self.Condition_SP_Variance)  # c,
+        # # add noise on fundus & OCT
+        # if self.condition == 'noise':
+        #     if self.condition_name == "SaltPepper":
+        #         fundus_img = add_salt_peper(fundus_img.transpose(1, 2, 0), self.Condition_SP_Variance)  # c,
+        #         fundus_img = fundus_img.transpose(2, 0, 1)
+        #         for i in range(oct_img.shape[0]):
+        #             oct_img[i, :, :] = add_salt_peper_3D(oct_img[i, :, :], self.Condition_SP_Variance)  # c,
 
-            elif self.condition_name == "Gaussian":
-                noise_add = np.random.normal(0, 0.5, fundus_img.shape)
-                ## noise_add = np.random.random(noise_data.shape) * self.Condition_G_Variance
-                fundus_img = fundus_img + noise_add
-                fundus_img = np.clip(fundus_img, 0.0, 1.0)
-                output_fundus_path = '/mnt/sdb/tangfeilong/Retinal_OCT/Confidence_MedIA/results/result_DR/fundus_image.png'
-                fundus_img= (fundus_img * 255).astype(np.uint8)
-                cv2.imwrite(output_fundus_path, fundus_img)
+        #     elif self.condition_name == "Gaussian":
+        #         noise_add = np.random.normal(0, 0.5, fundus_img.shape)
+        #         ## noise_add = np.random.random(noise_data.shape) * self.Condition_G_Variance
+        #         fundus_img = fundus_img + noise_add
+        #         fundus_img = np.clip(fundus_img, 0.0, 1.0)
+        #         output_fundus_path = '/mnt/sdb/tangfeilong/Retinal_OCT/Confidence_MedIA/results/result_DR/fundus_image.png'
+        #         fundus_img= (fundus_img * 255).astype(np.uint8)
+        #         cv2.imwrite(output_fundus_path, fundus_img)
 
-                test_image = oct_img
-                noise_add = np.random.normal(0, 0.5, oct_img.shape)
-                oct_img = oct_img + noise_add
-                oct_img = np.clip(oct_img, 0.0, 1.0)
-                noisy_image_to_save = (oct_img* 255).astype(np.uint8)  # 将图像值转换回 [0, 255] 范围并转换为 uint8 类型
+        #         test_image = oct_img
+        #         noise_add = np.random.normal(0, 0.5, oct_img.shape)
+        #         oct_img = oct_img + noise_add
+        #         oct_img = np.clip(oct_img, 0.0, 1.0)
+        #         noisy_image_to_save = (oct_img* 255).astype(np.uint8)  # 将图像值转换回 [0, 255] 范围并转换为 uint8 类型
 
-                slice_index = noisy_image_to_save.shape[0] // 2
-                slice_image = noisy_image_to_save[slice_index, :, :]
+        #         slice_index = noisy_image_to_save.shape[0] // 2
+        #         slice_image = noisy_image_to_save[slice_index, :, :]
 
-                original_slice_image = test_image[slice_index, :, :]
-                original_slice_image_to_save = (original_slice_image * 255).astype(np.uint8)
+        #         original_slice_image = test_image[slice_index, :, :]
+        #         original_slice_image_to_save = (original_slice_image * 255).astype(np.uint8)
 
-                # print(original_slice_image.shape)
-                if len(slice_image.shape) == 2:
-                    output_path = '/mnt/sdb/tangfeilong/Retinal_OCT/Confidence_MedIA/results/result_DR/noisy_slice_image.png'
-                    output1_path = '/mnt/sdb/tangfeilong/Retinal_OCT/Confidence_MedIA/results/result_DR/slice_image.png'
-                    cv2.imwrite(output_path, slice_image)
-                    cv2.imwrite(output1_path, original_slice_image_to_save)
-                    # print(f"Slice image saved to {output_path}")
+        #         # print(original_slice_image.shape)
+        #         if len(slice_image.shape) == 2:
+        #             output_path = '/mnt/sdb/tangfeilong/Retinal_OCT/Confidence_MedIA/results/result_DR/noisy_slice_image.png'
+        #             output1_path = '/mnt/sdb/tangfeilong/Retinal_OCT/Confidence_MedIA/results/result_DR/slice_image.png'
+        #             cv2.imwrite(output_path, slice_image)
+        #             cv2.imwrite(output1_path, original_slice_image_to_save)
+        #             # print(f"Slice image saved to {output_path}")
 
-            else:
-                # noise_add = np.random.random(noise_data.shape) * self.Condition_G_Variance
-                noise_add = np.random.normal(0, self.Condition_G_Variance, fundus_img.shape)
-                fundus_img = fundus_img + noise_add
-                fundus_img = np.clip(fundus_img, 0.0, 1.0)
+        #     else:
+        #         # noise_add = np.random.random(noise_data.shape) * self.Condition_G_Variance
+        #         noise_add = np.random.normal(0, self.Condition_G_Variance, fundus_img.shape)
+        #         fundus_img = fundus_img + noise_add
+        #         fundus_img = np.clip(fundus_img, 0.0, 1.0)
 
-                noise_add = np.random.normal(0, self.Condition_G_Variance, oct_img.shape)
-                oct_img = oct_img + noise_add
-                oct_img = np.clip(oct_img, 0.0, 1.0)
+        #         noise_add = np.random.normal(0, self.Condition_G_Variance, oct_img.shape)
+        #         oct_img = oct_img + noise_add
+        #         oct_img = np.clip(oct_img, 0.0, 1.0)
 
-                fundus_img = add_salt_peper(fundus_img, self.Condition_SP_Variance)  # c,
+        #         fundus_img = add_salt_peper(fundus_img, self.Condition_SP_Variance)  # c,
 
-                for i in range(oct_img.shape[0]):
-                    oct_img[i, :, :] = add_salt_peper_3D(oct_img[i, :, :], self.Condition_SP_Variance)  # c,
+        #         for i in range(oct_img.shape[0]):
+        #             oct_img[i, :, :] = add_salt_peper_3D(oct_img[i, :, :], self.Condition_SP_Variance)  # c,
 
         if self.mode == "train":
             fundus_img = self.fundus_train_transforms(fundus_img.astype(np.float32))
