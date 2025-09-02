@@ -1,4 +1,5 @@
 # Robust-Incomplete-Modality-Alignment-for-Ophthalmic-Disease-Grading-and-Diagnosis-via-Labeled-OT
+MICCAI 2025 early accept
 ## Introduction
 Multimodal ophthalmic imaging-based diagnosis integrates colour fundus imaging with optical coherence tomography (OCT) to provide a comprehensive view of ocular pathologies. 
 However, the uneven global distribution of healthcare resources often results in real-world clinical scenarios encountering incomplete multimodal data, which significantly compromises diagnostic accuracy. 
@@ -25,3 +26,4 @@ python test.py
 
 ## datasets
 from [Harward-30K](https://drive.google.com/drive/folders/1sLX2O_0AlrjY6JmdKijiV1zducsOsd0m)
+
