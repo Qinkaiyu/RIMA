@@ -10,6 +10,13 @@ By taking into account the distinctive feature characteristics of OCT and fundus
 </p>
 
 ## Before start
+### install perturbot
+```bash
+cd ../ott/
+pip install .
+cd ../perturbot
+pip install .
+```
 ### download pretrain 3D-Resnet here
 [link](https://drive.google.com/drive/folders/1Ytyg8pmAU0zSXDxY4klxw-BZW8Q-jBQ0?usp=sharing).
 replace pretrain path at file ./Models/generate_model.py line 113
@@ -26,4 +33,5 @@ python test.py
 
 ## datasets
 from [Harward-30K](https://drive.google.com/drive/folders/1sLX2O_0AlrjY6JmdKijiV1zducsOsd0m)
+
 
