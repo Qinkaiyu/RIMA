@@ -12,6 +12,8 @@ By taking into account the distinctive feature characteristics of OCT and fundus
 ## Before start
 ### install perturbot
 ```bash
+cd scvi-tools/
+pip install .
 cd ../ott/
 pip install .
 cd ../perturbot
@@ -33,5 +35,6 @@ python test.py
 
 ## datasets
 from [Harward-30K](https://drive.google.com/drive/folders/1sLX2O_0AlrjY6JmdKijiV1zducsOsd0m)
+
 
 
