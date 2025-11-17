@@ -15,7 +15,7 @@ dependencies = [
   "scanpy>=1.6",
   "POT>=0.9",
   "lightning",
-  "ott-jax==0.4.6a",
+  "ott-jax>=0.4.6",
   "scvi-tools==1.1.0a"
 ]
 classifiers = [

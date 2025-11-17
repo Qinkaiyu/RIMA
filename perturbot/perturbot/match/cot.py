@@ -3,8 +3,8 @@ from numbers import Number
 import numpy as np
 import time
 import ot
-from ott.src.ott.solvers import linear
-from ott.src.ott.geometry import geometry
+from ott.solvers import linear
+from ott.geometry import geometry
 from .utils import random_gamma_init, init_matrix_np
 import jax
 
@@ -18,9 +18,9 @@ def cot_numpy(
     v2=None,
     niter=10,
     algo="emd",
-    reg=0,
+    reg=0.2,
     algo2="emd",
-    reg2=0,
+    reg2=0.2,
     verbose=True,
     log=False,
     random_init=False,

@@ -4,13 +4,13 @@ from numbers import Number
 import numpy as np
 import jax.numpy as jnp
 import time
-import ott.src.ott
-from ott.src.ott.geometry import pointcloud, geometry
-from ott.src.ott.problems.linear import linear_problem
-from ott.src.ott.problems.quadratic import quadratic_problem
-from ott.src.ott.solvers.quadratic import gromov_wasserstein
-from ott.src.ott.solvers import linear
-from ott.src.ott.solvers.linear import acceleration, sinkhorn
+import ott
+from ott.geometry import pointcloud, geometry
+from ott.problems.linear import linear_problem
+from ott.problems.quadratic import quadratic_problem
+from ott.solvers.quadratic import gromov_wasserstein
+from ott.solvers import linear
+from ott.solvers.linear import acceleration, sinkhorn
 
 
 def create_block_diag_mat(labels_a, labels_b):
@@ -75,16 +75,16 @@ def get_coupling_egw_labels_ott(
     start = time.time()
 
     geom_xx = pointcloud.PointCloud(x=Xs_tot, y=Xs_tot, scale_cost="max_cost")
-    print('geom_xx.shape',geom_xx)
+    # print('geom_xx.shape',geom_xx)
     geom_yy = pointcloud.PointCloud(x=Xt_tot, y=Xt_tot, scale_cost="max_cost")
-    print('geom_xx.shape',geom_xx)
+    # print('geom_xx.shape',geom_xx)
 
     bdm = create_block_diag_mat(source_labels, target_labels)
-    print("Block diagonal matrix:")
-    print(bdm)
+    # print("Block diagonal matrix:")
+    # print(bdm)
     cost_time = time.time() - start
     start = time.time()
-    print("running EGWL with ott")
+    # print("running EGWL with ott")
 
     prob = quadratic_problem.QuadraticProblem(
         geom_xx,

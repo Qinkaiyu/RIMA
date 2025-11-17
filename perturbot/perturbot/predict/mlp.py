@@ -11,7 +11,7 @@ import lightning as L
 from lightning.pytorch.callbacks import TQDMProgressBar
 from scvi.train._callbacks import LoudEarlyStopping
 from scvi.train._progress import ProgressBar
-from perturbot.perturbot.utils import mdict_to_matrix
+from perturbot.utils import mdict_to_matrix
 
 
 class MLP(L.LightningModule):

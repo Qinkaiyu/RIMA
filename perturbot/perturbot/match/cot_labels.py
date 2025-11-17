@@ -6,8 +6,8 @@ import numpy as np
 import time
 import ot as pot
 import matplotlib.pyplot as plt
-from ott.src.ott.solvers import linear
-from ott.src.ott.geometry import geometry
+from ott.solvers import linear
+from ott.geometry import geometry
 from .utils import random_gamma_init, init_matrix_np
 
 
@@ -20,9 +20,9 @@ def cotl_numpy(
     v2: Optional[np.ndarray] = None,
     niter: int = 100,
     algo: str = "emd",
-    reg: float = 0.1,
+    reg: float = 0.2,
     algo2: str = "emd",
-    reg2: float = 10.0,
+    reg2: float = 0.2,
     verbose: bool = True,
     log: bool = False,
     random_init: bool = False,
